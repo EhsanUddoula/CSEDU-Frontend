@@ -45,9 +45,8 @@ export default [
   },
 ]
 ```
-## Expanding the ESLint Configuration
 
-If you are developing a production application, we recommend updating the ESLint configuration to include robust lint rules for JavaScript and React:
+You can also install eslint-plugin-react and eslint-plugin-react-hooks for React-specific lint rules:
 
 ```javascript
 // eslint.config.js
