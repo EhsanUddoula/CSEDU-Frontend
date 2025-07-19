@@ -1,69 +1,95 @@
-# React + Vite
-
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
-
+React + JavaScript + Vite
+This template provides a minimal setup to get React working in Vite with Hot Module Replacement (HMR) and some ESLint rules.
 Currently, two official plugins are available:
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+@vitejs/plugin-react uses Babel for Fast Refresh
+@vitejs/plugin-react-swc uses SWC for Fast Refresh
 
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      ...tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      ...tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      ...tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
-
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
-
-```js
+Expanding the ESLint Configuration
+If you are developing a production application, we recommend updating the ESLint configuration to include robust lint rules for JavaScript and React:
 // eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+import eslint from '@eslint/js'
+import globals from 'globals'
 
-export default tseslint.config([
-  globalIgnores(['dist']),
+export default [
   {
-    
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
+    ignores: ['dist'],
+  },
+  {
+    files: ['**/*.{js,jsx}'],
     languageOptions: {
       parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
+        ecmaVersion: 'latest',
+        sourceType: 'module',
+        ecmaFeatures: {
+          jsx: true,
+        },
       },
-      // other options...
+      globals: {
+        ...globals.browser,
+        ...globals.node,
+      },
+    },
+    extends: [
+      // Base ESLint recommended rules for JavaScript
+      'eslint:recommended',
+      // Add other configurations as needed
+    ],
+    rules: {
+      // Customize rules as needed
+      'no-unused-vars': ['error', { vars: 'all', args: 'after-used', ignoreRestSiblings: false }],
     },
   },
-])
-```
+]
+
+You can also install eslint-plugin-react and eslint-plugin-react-hooks for React-specific lint rules:
+// eslint.config.js
+import eslint from '@eslint/js'
+import react from 'eslint-plugin-react'
+import reactHooks from 'eslint-plugin-react-hooks'
+import globals from 'globals'
+
+export default [
+  {
+    ignores: ['dist'],
+  },
+  {
+    files: ['**/*.{js,jsx}'],
+    languageOptions: {
+      parserOptions: {
+        ecmaVersion: 'latest',
+        sourceType: 'module',
+        ecmaFeatures: {
+          jsx: true,
+        },
+      },
+      globals: {
+        ...globals.browser,
+        ...globals.node,
+      },
+    },
+    plugins: {
+      react,
+      'react-hooks': reactHooks,
+    },
+    extends: [
+      // Base ESLint recommended rules
+      'eslint:recommended',
+      // React-specific rules
+      'plugin:react/recommended',
+      // React Hooks rules
+      'plugin:react-hooks/recommended',
+    ],
+    rules: {
+      // Customize React-specific rules
+      'react/prop-types': 'off', // Disable prop-types if not using them
+      'react/jsx-uses-react': 'off', // Not needed with React 17+ JSX Transform
+      'react/react-in-jsx-scope': 'off', // Not needed with React 17+ JSX Transform
+    },
+    settings: {
+      react: {
+        version: 'detect', // Automatically detect React version
+      },
+    },
+  },
+]
